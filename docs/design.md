@@ -200,3 +200,11 @@ Tras los análisis confirmatorios, explorar:
 | 6 | Análisis estadístico, controles, bootstrap | Figuras finales, IC, p-valores corregidos |
 | 7 | Replicación cross-model, análisis de robustez | Tabla de estabilidad |
 | 8 | Escritura, decisión go/no-go preprint | Manuscrito v0.1 |
+
+---
+
+## Enmiendas
+
+### 2026-05-13 — Modelo base de Fase 0
+
+La tabla de sujetos experimentales (§1) y las predicciones cuantitativas (§7) se mantienen, pero el modelo *de referencia* para los experimentos iterativos de Fases 0-3 deja de ser `google/gemma-2-2b` y pasa a ser `EleutherAI/pythia-1.4b`. Gemma 2 2B se utilizará en Fase 4 como modelo de replicación cross-architecture. Razones, alternativas y consecuencias completas en `docs/decisions/0002-modelo-base-pythia.md`.

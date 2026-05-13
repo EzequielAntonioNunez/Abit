@@ -137,3 +137,11 @@ Estos casos terminan el proyecto. Se publicará el resultado negativo si ocurre.
 - Código MIT, datos y resultados versionados con DVC o equivalente.
 - Pre-registro de hipótesis y predicciones cuantitativas antes de correr experimentos finales.
 - Reporte obligatorio de resultados negativos.
+
+---
+
+## Enmiendas
+
+### 2026-05-13 — Modelo base de Fase 0
+
+`google/gemma-2-2b`, listado como modelo principal en este plan, se sustituye por `EleutherAI/pythia-1.4b` como modelo base de las Fases 0-3. Gemma 2 2B pasa a Fase 4 (replicación cross-architecture). Motivación, alternativas y consecuencias en `docs/decisions/0002-modelo-base-pythia.md`. Los criterios de éxito y los rangos cuantitativos pre-registrados no se modifican.
