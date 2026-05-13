@@ -23,11 +23,11 @@ class LoadedModel:
 
     @property
     def n_layers(self) -> int:
-        return self.model.config.num_hidden_layers
+        return int(self.model.config.num_hidden_layers)
 
     @property
     def hidden_size(self) -> int:
-        return self.model.config.hidden_size
+        return int(self.model.config.hidden_size)
 
 
 def get_device() -> torch.device:
@@ -65,8 +65,8 @@ def load_model(
         output_hidden_states=output_hidden_states,
         output_attentions=output_attentions,
     )
-    model.to(device)
-    model.eval()
+    model.to(device)  # type: ignore[arg-type]
+    model.eval()  # type: ignore[no-untyped-call]
     return LoadedModel(
         name=name,
         revision=revision,

@@ -2,9 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from iat.io import read_yaml, snapshot_run, write_json, make_run_dir
+from iat.io import make_run_dir, read_yaml, snapshot_run, write_json
 from iat.seeding import set_seed
-
 
 EXPERIMENT_DIR = Path(__file__).parent
 

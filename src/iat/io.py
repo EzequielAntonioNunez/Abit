@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import subprocess
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -14,7 +14,7 @@ def make_run_dir(experiment_dir: Path) -> Path:
     Crea un directorio con timestamp ISO dentro de results/ del experimento.
     Devuelve la ruta creada.
     """
-    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    ts = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     run_dir = experiment_dir / "results" / ts
     run_dir.mkdir(parents=True, exist_ok=True)
     return run_dir
@@ -27,10 +27,11 @@ def write_yaml(path: Path, data: dict[str, Any]) -> None:
 
 def read_yaml(path: Path) -> dict[str, Any]:
     with path.open() as f:
-        return yaml.safe_load(f)
+        data: dict[str, Any] = yaml.safe_load(f)
+        return data
 
 
-def write_json(path: Path, data: Any) -> None:
+def write_json(path: Path, data: object) -> None:
     with path.open("w") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
