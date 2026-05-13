@@ -20,19 +20,37 @@ Tras el cierre formal de la línea de drift geométrico en `docs/decisions/0004-
 
 ## 2. Predicción pre-registrada
 
-| # | Predicción | Métrica | Rango / umbral | Lectura |
+Las predicciones se separan deliberadamente en dos niveles: **una predicción PRIMARIA** (la única que cuenta como pregunta de investigación) y **tres sanity checks** (que sólo validan que el aparato está funcionando; pasarlas no es un resultado, fallarlas obliga a depurar antes de interpretar).
+
+### Predicción PRIMARIA (resultado)
+
+| # | Predicción | Métrica | Umbral | Lectura |
 |---|---|---|---|---|
-| P1 | Sanity: M1 correlaciona con Shannon | Spearman ρ(M1, surprisal_bits) | ∈ [0.4, 0.8] | Si ρ < 0.3 hay un bug en M1; si ρ > 0.85 M1 es redundante con Shannon |
-| P2 | M1 aporta señal funcional ortogonal | Spearman parcial ρ(M1, delta_cloze \| surprisal_bits) | > 0.15 | Predicción primaria de descubrimiento |
-| P3 | Sanity cloze: delta_cloze no es ruido | Spearman ρ(delta_cloze, surprisal_bits) | ≠ 0 con IC excluyendo 0 | Control de calidad de la señal cloze |
-| P4 | Robustez: M1 no es subproducto de log_freq | Spearman parcial ρ(M1, surprisal_bits \| log_freq) | > 0.3 | Control análogo al de exp_002b |
+| **P2** | M1 aporta señal predictiva ortogonal a Shannon sobre una tarea funcional | Spearman parcial ρ(M1, delta_cloze \| surprisal_bits) | **> 0.15** | Es la única pregunta de investigación que exp_004 puede contestar. Si se cumple, hay primer apoyo empírico positivo de H3 del plan general en este proyecto. Si no, la formulación probabilística de "información como transformación" tampoco se detecta. |
 
-**Criterios de falsación**:
-- Si P1 falla (ρ < 0.3): hay un bug en `m1_and_cloze_block`. Parar y depurar antes de interpretar P2.
-- Si P1 está dentro de rango pero **P2 falla** (ρ_parcial < 0.10 o IC superior < 0.15): M1 es esencialmente una transformación monótona de Shannon. La línea "información ortogonal a Shannon" queda **cerrada como medida intrínseca**: cualquier valor predictivo de M1 ya está en Shannon. exp_005 pivotaría a tareas downstream con datasets externos (Counterfact, LAMBADA) antes de cerrar la línea entera.
-- Si P2 se cumple (ρ_parcial > 0.15) **y** P3 confirma señal cloze: H3 del plan recibe el primer apoyo empírico positivo del proyecto. exp_005 escalaría: barrido de k, cross-model con Pythia 2.8B, tareas downstream externas.
+### Sanity checks (NO son resultados; sólo validan el setup)
 
-**Notas sobre dependencias entre predicciones**: P1 es prerrequisito metodológico (sanity). P2 es la pregunta de fondo. P3 y P4 son controles. Sólo P1 y P2 son condiciones determinantes para "hay descubrimiento o no".
+| # | Predicción | Métrica | Umbral | Si falla, qué significa |
+|---|---|---|---|---|
+| P1 | M1 correlaciona con Shannon (coherencia metodológica) | Spearman ρ(M1, surprisal_bits) | ∈ [0.4, 0.8] | ρ < 0.3 → bug en `m1_and_cloze_block`. ρ > 0.85 → M1 colapsa a Shannon y P2 pierde sentido. No es un resultado; es un prerrequisito para creer en P2. |
+| P3 | delta_cloze no es ruido | Spearman ρ(delta_cloze, surprisal_bits) | IC 95% excluye 0 | Si IC contiene 0, la señal cloze es indistinguible de ruido y P2 no puede contestar la pregunta porque no hay tarea funcional medible. Bug en T1 o falta de poder estadístico. |
+| P4 | M1 no es subproducto de frecuencia léxica | Spearman parcial ρ(M1, surprisal_bits \| log_freq) | > 0.3 | Control análogo al de exp_002b: si M1 cae mucho tras controlar log_freq, sospecha de confound. No invalida P2 pero la matiza. |
+
+### Criterio de falsación de la teoría general
+
+Si **P1 pasa** (M1 está bien implementada, correlaciona como Shannon-like debería) **y P2 < 0.05** (M1 no aporta señal ortogonal sobre delta_cloze por encima del ruido), entonces:
+
+> **La formulación probabilística de "información como transformación" tampoco se detecta en este setup.**
+
+Esto sería el cuarto pre-registro consecutivo del proyecto que falla (exp_002 M2 última capa; exp_003 M2 capas; ahora M1 ortogonalidad). En ese caso **no se abre exp_005 automáticamente**: hay que revisar el marco teórico antes de seguir corriendo experimentos. La decisión queda en revisión humana, no en planificación automática.
+
+Si P2 ∈ [0.05, 0.15) — zona ambigua entre "no se detecta" y "se detecta" — el resultado se documenta como inconcluso. Tampoco se abre exp_005 sin decisión humana.
+
+### Notas sobre dependencias entre predicciones
+
+- **P1 es prerrequisito metodológico**, no resultado. Pasar P1 no aporta evidencia sobre la teoría.
+- **P2 es la única predicción que cuenta como resultado de investigación.** Falle como falle, lo que diga P2 (dentro o fuera del umbral) es lo que se reporta como hallazgo del experimento.
+- **P3 y P4 son controles**. Si P3 falla, P2 no puede contestar la pregunta (el aparato cloze está roto). Si P4 falla pero P2 pasa, el resultado es real pero matizado por el confound de frecuencia y exp_005 debería re-validarlo con frecuencias externas.
 
 ## 3. Cambios respecto al experimento anterior
 
