@@ -1,43 +1,30 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[codz]
-*$py.class
-
-# C extensions
-*.so
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
 downloads/
 eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+ENV/
+.env
+.env.*
 
-# PyInstaller
-#   Usually these files are written by a python script from a template
-#   before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+# Jupyter Notebooks
+.ipynb_checkpoints
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+# VSCode
+.vscode/
 
-# Unit test / coverage reports
+# MacOS
+.DS_Store
+
+# Resultados y datos grandes
+results/
 htmlcov/
+
+# Otros
+*.log
+*.tmp
 .tox/
 .nox/
 .coverage
@@ -216,3 +203,57 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+=======
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+build/
+dist/
+*.egg-info/
+.eggs/
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.hypothesis/
+
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+data/
+!data/.gitkeep
+*.parquet
+*.arrow
+*.bin
+*.safetensors
+*.pt
+*.pth
+
+mlruns/
+mlflow.db
+mlartifacts/
+wandb/
+
+experiments/*/results/*/
+!experiments/*/results/.gitkeep
+results/raw/
+
+*.log
+>>>>>>> 9c46006 (primer commit: estructura mínima, docs y setup reproducible)

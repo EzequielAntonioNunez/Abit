@@ -1,0 +1,26 @@
+experiment:
+  id: exp_001
+  name: shannon_baseline
+
+seed: 42
+
+model:
+  name: google/gemma-2-2b
+  revision: null
+  dtype: bfloat16
+
+dataset:
+  name: wikitext
+  split: validation
+  max_docs: 100
+  min_chars: 200
+
+sampling:
+  max_context_tokens: 256
+  min_context_tokens: 60
+  warmup_skip_tokens: 50
+
+output:
+  records_format: parquet
+  write_records: true
+  write_summary: true
