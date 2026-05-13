@@ -35,3 +35,19 @@ Se **cierra formalmente la línea de drift geométrico como métrica primaria de
 - **exp_002c** — réplica de exp_002b con frecuencias de un corpus externo (split train de WikiText-103 o C4 unigram counts) en lugar de frecuencia empírica intramuestral. **Descartada como continuación de la línea de drift**: exp_003 ya descartó que el problema fuera específico del post-final-LN, así que el confound de frecuencia (única motivación de exp_002c) deja de ser la incógnita pendiente. Si en el futuro hay una razón teórica nueva para reabrir M2, exp_002c podría rescatarse como control de robustez; hasta entonces, no se ejecuta.
 - **Variantes geométricas (M4 cosine drift, M5 effective dimension)**. Descartadas por riesgo de *p-hacking* tras dos falsificaciones consecutivas con pre-registro. Si tras exp_004 (M1 + T1) ambos resultados son nulos, podría considerarse un re-análisis sistemático del espacio de métricas geométricas con nuevo pre-registro; hasta entonces, no.
 - **Cambiar el modelo base a Llama 3.2 1B o Pythia 2.8B antes de cerrar M2**. Descartado por coste/riesgo: la consistencia entre las 8 capas barridas de Pythia 1.4B y el mecanismo identificado (estructura interna de la representación, no específica del LayerNorm final) hace poco probable que cambiar de modelo rescate la métrica. Replicar M2 en otra arquitectura sólo tiene sentido si M1 funciona y queremos generalizar el hallazgo.
+
+## Refinamiento 2026-05-13
+
+Tras revisión, el texto previo es ambiguo en un punto crítico y conviene precisarlo sin reescribir las secciones originales.
+
+**Sobre el motivo del cierre.** El cierre de la línea M2 **no se basa en una comprensión causal positiva del nulo**. Se basa en dos hechos concretos y verificables:
+
+1. Dos predicciones cuantitativas, pre-registradas en momentos distintos y diseñadas para discriminar entre alternativas mutuamente excluyentes, se falsificaron (exp_002: ρ ∈ [0.3, 0.6] → ρ = −0.044; exp_003: max_l ρ ≥ 0.25 → max_l ρ = +0.048).
+2. No tenemos una justificación teórica nueva para una tercera iteración. Las alternativas naturales — M4 (cosine drift), M5 (effective dimension), capas no barridas, otras arquitecturas — serían re-instanciaciones del mismo marco geométrico que ya falló dos veces. Probar una tercera variante sin teoría nueva sería selección post-hoc, no investigación pre-registrada.
+
+**Sobre la conjetura del LayerNorm.** El "Contexto" de esta ADR cita correctamente que exp_002b propuso H1 (artefacto del LayerNorm final) como mejor lectura cualitativa de la U-shape, y que exp_003 incluyó l = 23 (pre-final-LN) como punto diagnóstico. Lo que conviene explicitar es la conclusión:
+
+- La hipótesis H1 de exp_002b **fue refutada por exp_003**. Si el LayerNorm final fuera la causa, l = 23 (pre-norm) tendría que mostrar un patrón cualitativamente distinto a l = −1 (post-norm). No lo hace: ρ_marginal(l=23) = −0.078 vs ρ_marginal(l=−1) = −0.044, y ρ_parcial(l=23) = −0.133 vs ρ_parcial(l=−1) = −0.143. Numéricamente comparables, sin discontinuidad observable.
+- La frase "el mecanismo identificado (estructura interna de la representación, no específica del LayerNorm final)" en "Alternativas consideradas" debe leerse como **"el conjunto de evidencias acumuladas"**, no como una afirmación de mecanismo causal positivo. No identificamos *qué* causa el patrón observado; sólo establecimos *qué no lo causa* (no es el LayerNorm final).
+
+**Implicación práctica.** El cierre es robusto en sus datos pero no en su interpretación causal. Cualquier reapertura futura de la línea de drift geométrico requiere — además de teoría nueva y pre-registro nuevo — una propuesta explícita de cuál sería el mecanismo subyacente, dado que la refutación de H1 (LayerNorm) deja el espacio abierto. Esto se documenta aquí para que el lector futuro no asuma que sabíamos por qué la métrica fallaba.
