@@ -1,0 +1,19 @@
+experiment:
+  id: exp_002b
+  name: drift_decomposition
+
+seed: 42
+
+input:
+  source_experiment_dir: exp_002_activation_drift_last
+  records_glob: results/*/records.parquet
+
+analysis:
+  n_deciles: 10
+  bootstrap:
+    n_boot: 1000
+    alpha: 0.05
+
+output:
+  write_summary: true
+  write_figures: true

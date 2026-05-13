@@ -1,4 +1,4 @@
-.PHONY: install reinstall test lint format clean exp_001 exp_002
+.PHONY: install reinstall test lint format clean exp_001 exp_002 exp_002b
 
 install:
 	@if [ -d .venv ]; then \
@@ -33,3 +33,6 @@ exp_001:
 
 exp_002:
 	python experiments/exp_002_activation_drift_last/run.py
+
+exp_002b:
+	python experiments/exp_002b_drift_decomposition/run.py
