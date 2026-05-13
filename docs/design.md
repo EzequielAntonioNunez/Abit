@@ -208,3 +208,7 @@ Tras los análisis confirmatorios, explorar:
 ### 2026-05-13 — Modelo base de Fase 0
 
 La tabla de sujetos experimentales (§1) y las predicciones cuantitativas (§7) se mantienen, pero el modelo *de referencia* para los experimentos iterativos de Fases 0-3 deja de ser `google/gemma-2-2b` y pasa a ser `EleutherAI/pythia-1.4b`. Gemma 2 2B se utilizará en Fase 4 como modelo de replicación cross-architecture. Razones, alternativas y consecuencias completas en `docs/decisions/0002-modelo-base-pythia.md`.
+
+### 2026-05-13 — Cierre de M2 (activation drift) como métrica candidata
+
+Las métricas M2_last, M2_mean, M2_max y la variante M4 (cosine drift) listadas en §3 quedan **descartadas como candidatas primarias** tras la falsificación pre-registrada de exp_002, exp_002b y exp_003. El barrido por capas de Pythia 1.4B (8 capas, ver exp_003 sección 6) muestra que ninguna capa alcanza ρ_Spearman ≥ 0.25 contra surprisal, y que el punto pre-final-LN (l = 23) es indistinguible numéricamente del post-final-LN (l = −1), descartando que la causa fuera el LayerNorm final. M5 (effective dimension drift) también se descarta como continuación natural sin nueva justificación teórica. La métrica primaria pasa a ser M1 (Bayesian surprise sobre bloque futuro), §3, evaluada en exp_004 contra T1 cloze (§4). Razones completas en `docs/decisions/0004-cierre-linea-drift-geometrico.md`.

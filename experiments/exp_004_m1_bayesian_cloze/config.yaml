@@ -1,0 +1,49 @@
+experiment:
+  id: exp_004
+  name: m1_bayesian_cloze
+
+seed: 42
+
+model:
+  name: EleutherAI/pythia-1.4b
+  revision: null
+  dtype: bfloat16
+
+dataset:
+  name: wikitext
+  split: validation
+  max_docs: 100
+  min_chars: 200
+
+sampling:
+  max_context_tokens: 256
+  min_context_tokens: 60
+  warmup_skip_tokens: 50
+
+m1:
+  # Tamano del bloque futuro para Bayesian surprise (docs/design.md §3 M1).
+  # k=5 es el valor pre-registrado en este experimento. Aproximacion practica
+  # KL token-a-token sobre los siguientes k pasos.
+  k: 5
+
+cloze:
+  # Probe intra-documento para T1 (docs/design.md §4 T1).
+  # delta_cloze(i) = | log p(t_{i+k_probe} | t_<=i) - log p(t_{i+k_probe} | t_<i) |
+  # k_probe se reusa = m1.k para compartir el segundo forward por target.
+  source: intra_document
+  # external_datasets queda configurado pero deshabilitado: se considerara
+  # en exp_005+ si exp_004 muestra senal en T1.
+  external_datasets:
+    enabled: false
+    candidates:
+      - lambada
+      - counterfact
+
+bootstrap:
+  n_boot: 1000
+  alpha: 0.05
+
+output:
+  records_format: parquet
+  write_records: true
+  write_summary: true

@@ -145,3 +145,7 @@ Estos casos terminan el proyecto. Se publicará el resultado negativo si ocurre.
 ### 2026-05-13 — Modelo base de Fase 0
 
 `google/gemma-2-2b`, listado como modelo principal en este plan, se sustituye por `EleutherAI/pythia-1.4b` como modelo base de las Fases 0-3. Gemma 2 2B pasa a Fase 4 (replicación cross-architecture). Motivación, alternativas y consecuencias en `docs/decisions/0002-modelo-base-pythia.md`. Los criterios de éxito y los rangos cuantitativos pre-registrados no se modifican.
+
+### 2026-05-13 — Cierre de la línea de drift geométrico (M2)
+
+La métrica M2 (`activation drift` en norma L2 normalizada) queda cerrada como candidata primaria para evaluar las hipótesis H1-H3 de este plan tras tres pre-registros falsificados consecutivamente (exp_002 en última capa, exp_002b tras controlar log_freq, exp_003 barriendo 8 capas en Pythia 1.4B). La métrica primaria pasa a ser M1 (Bayesian surprise sobre bloque futuro), evaluada en exp_004 contra la tarea downstream T1 (cloze). Razones, alternativas y consecuencias en `docs/decisions/0004-cierre-linea-drift-geometrico.md`. La estructura de las hipótesis H1-H3 no se reformula; lo que cambia es la métrica candidata que las instancia.

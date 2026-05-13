@@ -1,4 +1,4 @@
-.PHONY: install reinstall test lint format clean exp_001 exp_002 exp_002b exp_003
+.PHONY: install reinstall test lint format clean exp_001 exp_002 exp_002b exp_003 exp_004
 
 install:
 	@if [ -d .venv ]; then \
@@ -39,3 +39,6 @@ exp_002b:
 
 exp_003:
 	python experiments/exp_003_drift_by_layer/run.py
+
+exp_004:
+	python experiments/exp_004_m1_bayesian_cloze/run.py
