@@ -1,0 +1,30 @@
+experiment:
+  id: exp_002
+  name: activation_drift_last
+
+seed: 42
+
+model:
+  name: EleutherAI/pythia-1.4b
+  revision: null
+  dtype: bfloat16
+
+dataset:
+  name: wikitext
+  split: validation
+  max_docs: 100
+  min_chars: 200
+
+sampling:
+  max_context_tokens: 256
+  min_context_tokens: 60
+  warmup_skip_tokens: 50
+
+bootstrap:
+  n_boot: 1000
+  alpha: 0.05
+
+output:
+  records_format: parquet
+  write_records: true
+  write_summary: true
