@@ -1,7 +1,15 @@
-.PHONY: install test lint format clean exp_001
+.PHONY: install reinstall test lint format clean exp_001
 
 install:
-	uv venv
+	@if [ -d .venv ]; then \
+		echo ".venv ya existe, reutilizando (usar make reinstall para recrear)"; \
+	else \
+		uv venv; \
+	fi
+	uv pip install -e ".[dev]"
+
+reinstall:
+	uv venv --clear
 	uv pip install -e ".[dev]"
 
 test:
