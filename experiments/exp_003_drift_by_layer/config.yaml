@@ -1,0 +1,43 @@
+experiment:
+  id: exp_003
+  name: drift_by_layer
+
+seed: 42
+
+model:
+  name: EleutherAI/pythia-1.4b
+  revision: null
+  dtype: bfloat16
+
+dataset:
+  name: wikitext
+  split: validation
+  max_docs: 100
+  min_chars: 200
+
+sampling:
+  max_context_tokens: 256
+  min_context_tokens: 60
+  warmup_skip_tokens: 50
+
+# Barrido de capas en Pythia 1.4B (n_hidden_layers = 24, hidden_states tiene 25 entradas).
+# Indice 0 = embeddings de entrada. Indices 1..24 = outputs de los 24 bloques transformer.
+# La última (-1 = 24) es la usada por exp_002 (post-final-LayerNorm). 23 = pre-final-LN.
+layers:
+  - 0
+  - 4
+  - 8
+  - 12
+  - 16
+  - 20
+  - 23
+  - -1
+
+bootstrap:
+  n_boot: 1000
+  alpha: 0.05
+
+output:
+  records_format: parquet
+  write_records: true
+  write_summary: true
