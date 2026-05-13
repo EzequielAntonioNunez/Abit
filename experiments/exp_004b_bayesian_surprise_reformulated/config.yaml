@@ -1,0 +1,45 @@
+experiment:
+  id: exp_004b
+  name: bayesian_surprise_reformulated
+
+seed: 42
+
+model:
+  name: EleutherAI/pythia-1.4b
+  revision: null
+  dtype: bfloat16
+
+dataset:
+  name: wikitext
+  split: validation
+  max_docs: 100
+  min_chars: 200
+
+sampling:
+  max_context_tokens: 256
+  min_context_tokens: 60
+  warmup_skip_tokens: 50
+
+m1_cf:
+  k: 5
+  # delta_cloze_cf se calcula como subproducto al offset k.
+
+m1_marginal:
+  top_k: 32
+  # k implicito = 1 (un solo token siguiente) por coste.
+
+precision:
+  # Logits del modelo en su dtype nativo (bfloat16 en MPS). log_softmax y KL
+  # en float32 para evitar el ruido bf16 detectado en exp_004 (diferencias
+  # de hasta 0.17 en logits posicionales que el causal mask predice
+  # identicos).
+  kl_dtype: float32
+
+bootstrap:
+  n_boot: 1000
+  alpha: 0.05
+
+output:
+  records_format: parquet
+  write_records: true
+  write_summary: true
