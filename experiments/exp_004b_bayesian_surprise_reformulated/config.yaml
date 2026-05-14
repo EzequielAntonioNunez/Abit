@@ -12,7 +12,11 @@ model:
 dataset:
   name: wikitext
   split: validation
-  max_docs: 100
+  # Reducido de 100 a 30 tras abort de la primera ejecucion: docs 18-20
+  # mostraron ralentizacion de 83s -> 220s por doc, proyectado >5h vs
+  # umbral pre-registrado de 90 min. Ver README §4 nota de ajuste y
+  # §5 para el contexto.
+  max_docs: 30
   min_chars: 200
 
 sampling:
