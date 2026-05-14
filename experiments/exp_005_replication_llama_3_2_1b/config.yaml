@@ -1,0 +1,43 @@
+experiment:
+  id: exp_005
+  name: replication_llama_3_2_1b
+
+seed: 42
+
+model:
+  # Replicacion cross-architecture de exp_004b. Llama 3.2 1B puede estar
+  # gated; si lo esta en el momento de la ejecucion, el README §4 documenta
+  # un fallback a Pythia 2.8B (open weights, similar escala).
+  name: meta-llama/Llama-3.2-1B
+  revision: null
+  dtype: bfloat16
+
+dataset:
+  name: wikitext
+  split: validation
+  # Mismo N reducido que exp_004b para mantener comparabilidad.
+  max_docs: 30
+  min_chars: 200
+
+sampling:
+  max_context_tokens: 256
+  min_context_tokens: 60
+  warmup_skip_tokens: 50
+
+m1_cf:
+  k: 5
+
+m1_marginal:
+  top_k: 32
+
+precision:
+  kl_dtype: float32
+
+bootstrap:
+  n_boot: 1000
+  alpha: 0.05
+
+output:
+  records_format: parquet
+  write_records: true
+  write_summary: true

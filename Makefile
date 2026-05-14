@@ -1,4 +1,4 @@
-.PHONY: install reinstall test lint format clean exp_001 exp_002 exp_002b exp_003 exp_004 exp_004b
+.PHONY: install reinstall test lint format clean exp_001 exp_002 exp_002b exp_003 exp_004 exp_004b exp_005
 
 install:
 	@if [ -d .venv ]; then \
@@ -45,3 +45,6 @@ exp_004:
 
 exp_004b:
 	python experiments/exp_004b_bayesian_surprise_reformulated/run.py
+
+exp_005:
+	python experiments/exp_005_replication_llama_3_2_1b/run.py
